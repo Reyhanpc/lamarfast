@@ -56,14 +56,16 @@
                     <div class="mb-6">
                         <p class="editable-text" contenteditable="true">Kepada Yth.,</p>
                         <p class="editable-text" contenteditable="true">HRD Manager</p>
-                        <p class="font-bold editable-text" contenteditable="true">PT Mencari Cinta Sejati</p>
+                        <!-- font-bold dihilangkan dari PT -->
+                        <p class="editable-text" contenteditable="true">PT Mencari Cinta Sejati</p>
                         <p class="editable-text" contenteditable="true">di Tempat</p>
                     </div>
                     
                     <div class="mb-4"><p class="editable-text" contenteditable="true">Dengan hormat,</p></div>
                     
+                    <!-- Tag <strong> dihilangkan dari posisi -->
                     <div class="mb-4">
-                        <div class="editable-text" contenteditable="true">Berdasarkan informasi lowongan pekerjaan yang saya peroleh, bahwa perusahaan yang Bapak/Ibu pimpin sedang membutuhkan karyawan untuk posisi <strong>Web Developer</strong>. Oleh karena itu, saya yang bertanda tangan di bawah ini:</div>
+                        <div class="editable-text" contenteditable="true">Berdasarkan informasi lowongan pekerjaan yang saya peroleh, bahwa perusahaan yang Bapak/Ibu pimpin sedang membutuhkan karyawan untuk posisi Web Developer. Oleh karena itu, saya yang bertanda tangan di bawah ini:</div>
                     </div>
                     
                     <table class="biodata-table">
@@ -79,17 +81,16 @@
 Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan kesempatan mengikuti tahapan seleksi selanjutnya. Atas perhatiannya saya ucapkan terima kasih.</div>
                     </div>
                     
-                    <!-- WADAH TANDA TANGAN BISA DICORET -->
                     <div class="text-right mt-12">
                         <p class="editable-text" contenteditable="true">Hormat saya,</p>
                         
-                        <!-- Area Papan Gambar (Canvas) -->
                         <div style="display: flex; flex-direction: column; align-items: flex-end; margin: 10px 0;">
                             <canvas id="ttd-canvas" width="180" height="80" style="border: 1px dashed #cbd5e1; border-radius: 4px; cursor: crosshair; touch-action: none; background: #f8fafc;"></canvas>
                             <button id="btn-hapus-ttd" onclick="clearCanvas()" style="font-size: 0.75rem; color: #ef4444; background: none; border: none; cursor: pointer; margin-top: 4px; font-weight: bold;">✖ Hapus Coretan</button>
                         </div>
                         
-                        <p class="font-bold underline editable-text" contenteditable="true" id="out-ttd">Nama Lengkap Anda</p>
+                        <!-- font-bold dihilangkan dari Nama Lengkap (Tanda Tangan) -->
+                        <p class="underline editable-text" contenteditable="true" id="out-ttd">Nama Lengkap Anda</p>
                     </div>
                 </div>
             </div>
@@ -114,7 +115,6 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
 
-        // Pengaturan gaya tinta
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
         ctx.strokeStyle = '#000000';
@@ -126,12 +126,12 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
 
         function endPosition() {
             isDrawing = false;
-            ctx.beginPath(); // Putus garis agar coretan berikutnya tidak menyambung
+            ctx.beginPath(); 
         }
 
         function draw(e) {
             if (!isDrawing) return;
-            e.preventDefault(); // Cegah layar terscroll saat menggambar di HP
+            e.preventDefault(); 
 
             const rect = canvas.getBoundingClientRect();
             let clientX = e.clientX || (e.touches && e.touches[0].clientX);
@@ -146,13 +146,10 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
             ctx.moveTo(x, y);
         }
 
-        // Event listener untuk Mouse (Laptop/PC)
         canvas.addEventListener('mousedown', startPosition);
         canvas.addEventListener('mouseup', endPosition);
         canvas.addEventListener('mousemove', draw);
         canvas.addEventListener('mouseout', endPosition);
-
-        // Event listener untuk Touch (Layar HP)
         canvas.addEventListener('touchstart', startPosition, { passive: false });
         canvas.addEventListener('touchend', endPosition);
         canvas.addEventListener('touchmove', draw, { passive: false });
@@ -191,11 +188,8 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
             
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebar-overlay').classList.remove('active');
-            
-            // Matikan styling mode edit agar tidak ikut terfoto
             document.querySelectorAll('.editable-text').forEach(el => el.setAttribute('contenteditable', 'false'));
             
-            // Hilangkan kotak putus-putus dan tombol hapus pada canvas tanda tangan
             canvas.style.border = 'none';
             canvas.style.background = 'transparent';
             document.getElementById('btn-hapus-ttd').style.display = 'none';
@@ -234,7 +228,6 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
 
                 document.querySelectorAll('.editable-text').forEach(el => el.setAttribute('contenteditable', 'true'));
                 
-                // Kembalikan tampilan canvas seperti semula
                 canvas.style.border = '1px dashed #cbd5e1';
                 canvas.style.background = '#f8fafc';
                 document.getElementById('btn-hapus-ttd').style.display = 'block';
