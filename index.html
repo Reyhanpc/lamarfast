@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surat Lamaran WYSIWYG</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+
+<body>
+
+    <header class="mobile-header">
+        <h1>Surat Lamaran</h1>
+        <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="app-container">
+        <!-- SIDEBAR (Hanya Untuk Alat & Lampiran) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>Menu Editor</h1>
+                <button class="close-btn" onclick="toggleSidebar()">✖</button>
+            </div>
+
+            <div class="sidebar-content">
+                <div class="info-box">
+                    💡 <strong>Tips Mode Cepat:</strong><br>
+                    Arahkan kursor dan klik teks apa saja di atas kertas surat untuk langsung mengubah isinya.
+                </div>
+
+                <details open>
+                    <summary>Upload Lampiran</summary>
+                    <div class="details-body">
+                        <span class="file-info">Unggah KTP, CV, atau Ijazah (Format Gambar JPG/PNG). Akan otomatis
+                            menjadi halaman baru.</span>
+                        <input type="file" id="in-file" multiple accept="image/*" class="form-group">
+                        <button onclick="resetLampiran()" class="btn btn-danger">Hapus Semua Lampiran</button>
+                    </div>
+                </details>
+            </div>
+
+            <div class="sidebar-footer">
+                <button onclick="downloadPDF()" class="btn btn-primary">Unduh Semua Jadi 1 PDF</button>
+            </div>
+        </aside>
+
+        <!-- MAIN PREVIEW (KERTAS A4 EDITABLE) -->
+        <main class="main-preview">
+            <div id="dokumen-cetak" class="a4-wrapper">
+                <div class="a4-paper">
+                    <!-- Tanggal -->
+                    <div class="text-right mb-6"><span class="editable-text" contenteditable="true">Surabaya, 25 Oktober
+                            2026</span></div>
+
+                    <div class="mb-4">
+                        <p class="editable-text" contenteditable="true">Hal : Lamaran Pekerjaan</p>
+                    </div>
+
+                    <!-- Tujuan -->
+                    <div class="mb-6">
+                        <p class="editable-text" contenteditable="true">Kepada Yth.,</p>
+                        <p class="editable-text" contenteditable="true">HRD Manager</p>
+                        <p class="font-bold editable-text" contenteditable="true">PT Mencari Cinta Sejati</p>
+                        <p class="editable-text" contenteditable="true">di Tempat</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="editable-text" contenteditable="true">Dengan hormat,</p>
+                    </div>
+
+                    <!-- Paragraf Pembuka -->
+                    <div class="mb-4">
+                        <div class="editable-text" contenteditable="true">Berdasarkan informasi lowongan pekerjaan yang
+                            saya peroleh, bahwa perusahaan yang Bapak/Ibu pimpin sedang membutuhkan karyawan untuk
+                            posisi <strong>Web Developer</strong>. Oleh karena itu, saya yang bertanda tangan di bawah
+                            ini:</div>
+                    </div>
+
+                    <!-- Biodata -->
+                    <table class="biodata-table">
+                        <tr>
+                            <td class="td-label">Nama</td>
+                            <td class="td-colon">:</td>
+                            <td><span class="editable-text" contenteditable="true" id="out-nama"
+                                    oninput="syncNama()">Nama Lengkap Anda</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">Pendidikan</td>
+                            <td class="td-colon">:</td>
+                            <td><span class="editable-text" contenteditable="true">SMK Jurusan Rekayasa Perangkat
+                                    Lunak</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">No. HP</td>
+                            <td class="td-colon">:</td>
+                            <td><span class="editable-text" contenteditable="true">081234567890</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">Email</td>
+                            <td class="td-colon">:</td>
+                            <td><span class="editable-text" contenteditable="true">email@anda.com</span></td>
+                        </tr>
+                    </table>
+
+                    <!-- Paragraf Penutup -->
+                    <div class="mb-4">
+                        <div class="editable-text" contenteditable="true">Bermaksud untuk mengajukan lamaran pekerjaan
+                            pada posisi tersebut. Saya memiliki minat yang besar pada bidang ini dan siap untuk
+                            memberikan kontribusi terbaik bagi perusahaan. Sebagai bahan pertimbangan, bersama surat ini
+                            saya lampirkan dokumen persyaratan kelengkapan.
+                            <br><br>
+                            Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan kesempatan
+                            mengikuti tahapan seleksi selanjutnya. Atas perhatiannya saya ucapkan terima kasih.
+                        </div>
+                    </div>
+
+                    <!-- Tanda Tangan -->
+                    <div class="text-right mt-12">
+                        <p class="editable-text" contenteditable="true">Hormat saya,</p><br><br><br>
+                        <p class="font-bold underline editable-text" contenteditable="true" id="out-ttd">Nama Lengkap
+                            Anda</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        function syncNama() {
+            const namaUtama = document.getElementById('out-nama').innerText;
+            document.getElementById('out-ttd').innerText = namaUtama;
+        }
+
+        // Fitur Lampiran Gambar (Disempurnakan)
+        const fileInput = document.getElementById('in-file');
+        const wadahCetak = document.getElementById('dokumen-cetak');
+        
+        fileInput.addEventListener('change', function(e) {
+            Array.from(e.target.files).forEach(file => {
+                if (!file.type.startsWith('image/')) return; 
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const halamanBaru = document.createElement('div');
+                    // Class pemisah halaman disatukan ke div lampiran
+                    halamanBaru.className = 'a4-paper lampiran-page html2pdf__page-break';
+                    halamanBaru.innerHTML = `<img src="${event.target.result}" class="lampiran-img">`;
+                    wadahCetak.appendChild(halamanBaru);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        function resetLampiran() {
+            document.querySelectorAll('.lampiran-page').forEach(el => el.remove());
+            fileInput.value = '';
+        }
+
+        // Download PDF Anti Halaman Kosong
+        function downloadPDF() {
+            const element = document.getElementById('dokumen-cetak');
+            const namaPembuat = document.getElementById('out-nama').innerText.replace(/[^a-zA-Z0-9]/g, '_');
+            
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-overlay').classList.remove('active');
+            document.querySelectorAll('.editable-text').forEach(el => el.setAttribute('contenteditable', 'false'));
+            
+            element.style.gap = "0";
+            element.style.paddingBottom = "0";
+            
+            // KUNCI PERBAIKAN: Paksa tinggi kertas menjadi 296mm agar pixel tidak meluber
+            document.querySelectorAll('.a4-paper').forEach(el => {
+                el.style.margin = "0";
+                el.style.boxShadow = "none";
+                el.style.minHeight = "0";
+                el.style.height = "296mm"; 
+                el.style.overflow = "hidden";
+            });
+
+            const opt = {
+                margin:       0,
+                filename:     `Surat_Lamaran_${namaPembuat}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => { 
+                // Kembalikan ke tampilan normal setelah berhasil didownload
+                element.style.gap = "2rem";
+                element.style.paddingBottom = "4rem"; 
+                
+                document.querySelectorAll('.a4-paper').forEach(el => {
+                    el.style.margin = "";
+                    el.style.boxShadow = "";
+                    el.style.minHeight = "297mm";
+                    el.style.height = "auto";
+                    el.style.overflow = "visible";
+                });
+
+                document.querySelectorAll('.editable-text').forEach(el => el.setAttribute('contenteditable', 'true'));
+            });
+        }
+    </script>
+</body>
+
+</html>
