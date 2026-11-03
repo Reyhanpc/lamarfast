@@ -32,7 +32,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial
 .sidebar-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 .sidebar-footer { padding: 1.25rem; border-top: 1px solid #e2e8f0; background: #ffffff; }
 
-/* Responsif Sidebar HP (Default Sembunyi) */
+/* Responsif Sidebar HP */
 @media (max-width: 1023px) {
     .sidebar { position: fixed; top: 0; left: -100%; width: 320px; max-width: 85vw; height: 100vh; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     .sidebar.open { left: 0; }
@@ -68,39 +68,36 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; background: #eff6ff; c
 .main-preview { flex: 1; height: 100%; overflow-y: auto; padding: 2rem; background-color: #e2e8f0; }
 .a4-wrapper { display: flex; flex-direction: column; align-items: center; gap: 2rem; padding-bottom: 4rem; }
 .a4-paper { width: 210mm; min-height: 297mm; background: white; padding: 20mm; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); font-family: 'Times New Roman', Times, serif; color: #000; line-height: 1.5; text-align: justify; }
-.lampiran-img { width: 100%; height: 100%; object-fit: contain; }
 
-/* --- EDITABLE TEXT DI KERTAS --- */
-.editable-text { outline: 1px dashed transparent; border-radius: 2px; transition: 0.2s; padding: 0 2px; }
-.editable-text:hover { outline: 1px dashed #94a3b8; background-color: #f8fafc; cursor: text; }
-.editable-text:focus { outline: 2px solid #2563eb; background-color: #ffffff; padding: 2px 4px; }
-div.editable-text { display: block; padding: 4px; margin: -4px; }
+/* PERBAIKAN GAMBAR LAMPIRAN AGAR TIDAK KETARIK */
+.lampiran-img { 
+    max-width: 100%; 
+    max-height: 250mm; /* Menahan tinggi agar tidak melebihi kertas (297mm - margin) */
+    width: auto; 
+    height: auto; 
+    display: block; 
+    margin: 0 auto; /* Posisi di tengah */
+}
+
+/* --- EDITABLE TEXT BERGAYA MICROSOFT WORD --- */
+.editable-text { outline: none !important; border: none !important; background: transparent !important; cursor: text; }
+.editable-text:hover, .editable-text:focus { outline: none !important; background: transparent !important; }
 
 /* Utilitas Teks */
 .text-right { text-align: right; } .mb-4 { margin-bottom: 1rem; } .mb-6 { margin-bottom: 1.5rem; } .mt-12 { margin-top: 3rem; } .underline { text-decoration: underline; }
 .biodata-table { width: 100%; margin-left: 2rem; margin-bottom: 1rem; } .biodata-table td { padding: 0.25rem 0; vertical-align: top; } .td-label { width: 8rem; } .td-colon { width: 1rem; }
 
-/* --- RESPONSIF KHUSUS HP (Agar Kertas A4 Menyesuaikan Layar Kecil) --- */
+/* Responsif HP */
 @media (max-width: 1023px) {
     body { overflow: auto; }
     .app-container { height: auto; }
     .main-preview { height: auto; overflow: visible; padding: 1rem 0.5rem; }
     .a4-wrapper { width: 100%; align-items: center; gap: 1rem; padding-bottom: 2rem; }
-    
-    /* Otomatis mengecilkan ukuran kertas A4 agar muat di layar HP tanpa merusak layout */
-    .a4-paper { 
-        width: 100% !important; 
-        max-width: 210mm; 
-        min-height: auto; 
-        height: auto;
-        padding: 8mm; 
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); 
-        font-size: 13px; /* Menyesuaikan ukuran font agar pas di HP */
-    }
+    .a4-paper { width: 100% !important; max-width: 210mm; min-height: auto; height: auto; padding: 8mm; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); font-size: 13px; }
 }
 
 @media print {
     .main-preview { padding: 0; background: transparent; }
     .a4-paper { box-shadow: none; margin: 0; width: 210mm !important; min-height: 297mm !important; padding: 20mm !important; font-size: 16px !important; }
-    .editable-text { outline: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }
-}
+                }
+                   
