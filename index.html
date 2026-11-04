@@ -27,10 +27,9 @@
             <div class="sidebar-content">
                 <div class="info-box">
                     💡 <strong>Tips Mode Cepat:</strong><br>
-                    Area kertas surat sekarang berfungsi persis seperti Microsoft Word. Anda bebas mengetik, menekan Enter, atau menghapus (Backspace) bagian mana saja sesuka hati.
+                    Area kertas surat sekarang berfungsi persis seperti Microsoft Word. Data dan tanda tangan yang Anda buat akan <strong>tersimpan otomatis</strong> meski web dimuat ulang.
                 </div>
 
-                <!-- MENU BARU: TEMPLATE EMAIL -->
                 <details open>
                     <summary>Template Email (Copy-Paste)</summary>
                     <div class="details-body">
@@ -61,7 +60,6 @@ Hormat saya,
                     </div>
                 </details>
 
-                <!-- MENU LAMPIRAN -->
                 <details open>
                     <summary>Upload Lampiran</summary>
                     <div class="details-body">
@@ -83,8 +81,8 @@ Hormat saya,
                 
                 <div class="a4-paper" style="display: flex; flex-direction: column;">
                     
-                    <!-- SATU AREA KETIK UTAMA (Berlaku Seperti MS Word) -->
-                    <div contenteditable="true" style="outline: none; flex: 1;">
+                    <!-- ID surat-content ditambahkan untuk fitur penyimpanan -->
+                    <div id="surat-content" contenteditable="true" style="outline: none; flex: 1;">
                         <div class="text-right mb-6">Surabaya, 25 Oktober 2026</div>
                         
                         <div class="mb-4">Hal : Lamaran Pekerjaan</div>
@@ -144,46 +142,51 @@ Hormat saya,
             overlay.classList.toggle('active');
         }
 
-        // --- FITUR SALIN TEKS EMAIL ---
         function salinTeks(elementId, btn) {
             const elemenTeks = document.getElementById(elementId);
             elemenTeks.select();
-            elemenTeks.setSelectionRange(0, 99999); // Untuk kompabilitas layar HP
+            elemenTeks.setSelectionRange(0, 99999); 
             
             navigator.clipboard.writeText(elemenTeks.value).then(() => {
                 const teksAsli = btn.innerText;
                 const warnaAsli = btn.style.backgroundColor;
                 const warnaTeksAsli = btn.style.color;
                 
-                // Ubah gaya tombol menjadi hijau saat berhasil disalin
                 btn.innerText = "Tersalin! ✔";
                 btn.style.backgroundColor = "#10b981"; 
                 btn.style.color = "white";
                 
-                // Kembalikan gaya tombol setelah 2 detik
                 setTimeout(() => {
                     btn.innerText = teksAsli;
                     btn.style.backgroundColor = warnaAsli;
                     btn.style.color = warnaTeksAsli;
                 }, 2000);
-            }).catch(err => {
-                alert('Gagal menyalin teks!');
-            });
+            }).catch(err => alert('Gagal menyalin teks!'));
         }
 
-        // --- PENGATURAN TOMBOL ENTER DI AREA EDITABLE ---
+        // --- PENGATURAN TOMBOL ENTER ---
         document.addEventListener('keydown', function(e) {
             const isEditable = e.target.hasAttribute('contenteditable') && e.target.getAttribute('contenteditable') === 'true';
-            
-            if (isEditable) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    document.execCommand('insertLineBreak');
-                }
+            if (isEditable && e.key === 'Enter') {
+                e.preventDefault();
+                document.execCommand('insertLineBreak');
             }
         });
 
-        // --- FITUR MENGGAMBAR TANDA TANGAN DI CANVAS ---
+        // --- FITUR AUTO-SAVE TEKS KE LOCALSTORAGE ---
+        function saveTextData() {
+            localStorage.setItem('suratContent', document.getElementById('surat-content').innerHTML);
+            localStorage.setItem('namaTtd', document.getElementById('nama-ttd').innerHTML);
+            localStorage.setItem('emailSubjek', document.getElementById('email-subjek').value);
+            localStorage.setItem('emailIsi', document.getElementById('email-isi').value);
+        }
+
+        document.getElementById('surat-content').addEventListener('input', saveTextData);
+        document.getElementById('nama-ttd').addEventListener('input', saveTextData);
+        document.getElementById('email-subjek').addEventListener('input', saveTextData);
+        document.getElementById('email-isi').addEventListener('input', saveTextData);
+
+        // --- FITUR MENGGAMBAR TANDA TANGAN & SAVE ---
         const canvas = document.getElementById('ttd-canvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
@@ -197,9 +200,16 @@ Hormat saya,
             draw(e);
         }
 
+        function saveSignature() {
+            localStorage.setItem('savedSignature', canvas.toDataURL());
+        }
+
         function endPosition() {
-            isDrawing = false;
-            ctx.beginPath(); 
+            if (isDrawing) {
+                isDrawing = false;
+                ctx.beginPath(); 
+                saveSignature(); // Simpan tanda tangan otomatis ke memori saat goresan selesai
+            }
         }
 
         function draw(e) {
@@ -229,7 +239,23 @@ Hormat saya,
 
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            localStorage.removeItem('savedSignature'); // Hapus tanda tangan dari memori
         }
+
+        // --- LOAD DATA SAAT WEB DIBUKA ---
+        window.onload = function() {
+            if (localStorage.getItem('suratContent')) document.getElementById('surat-content').innerHTML = localStorage.getItem('suratContent');
+            if (localStorage.getItem('namaTtd')) document.getElementById('nama-ttd').innerHTML = localStorage.getItem('namaTtd');
+            if (localStorage.getItem('emailSubjek')) document.getElementById('email-subjek').value = localStorage.getItem('emailSubjek');
+            if (localStorage.getItem('emailIsi')) document.getElementById('email-isi').value = localStorage.getItem('emailIsi');
+            
+            const savedSig = localStorage.getItem('savedSignature');
+            if (savedSig) {
+                const img = new Image();
+                img.onload = function() { ctx.drawImage(img, 0, 0); };
+                img.src = savedSig;
+            }
+        };
 
         // --- FITUR LAMPIRAN GAMBAR ---
         const fileInput = document.getElementById('in-file');
@@ -313,5 +339,5 @@ Hormat saya,
         }
     </script>
 </body>
-                            </html>
+    </html>
                 
