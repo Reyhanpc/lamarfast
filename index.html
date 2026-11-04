@@ -27,13 +27,45 @@
             <div class="sidebar-content">
                 <div class="info-box">
                     💡 <strong>Tips Mode Cepat:</strong><br>
-                    Arahkan kursor dan klik teks apa saja di atas kertas surat untuk langsung mengubah isinya. Anda juga bisa langsung menggambar tanda tangan di bagian bawah surat.
+                    Area kertas surat sekarang berfungsi persis seperti Microsoft Word. Anda bebas mengetik, menekan Enter, atau menghapus (Backspace) bagian mana saja sesuka hati.
                 </div>
 
+                <!-- MENU BARU: TEMPLATE EMAIL -->
+                <details open>
+                    <summary>Template Email (Copy-Paste)</summary>
+                    <div class="details-body">
+                        <span class="file-info">Edit template ini sesuai kebutuhan, lalu klik tombol Salin untuk menempelkannya di Gmail.</span>
+                        
+                        <div class="form-group" style="margin-top: 0.5rem;">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:#475569;">Subjek Email</label>
+                            <input type="text" id="email-subjek" value="Lamaran Pekerjaan - Web Developer - Nama Anda" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.6rem; font-size: 0.9rem; background: #f8fafc; margin-bottom: 0.5rem;">
+                            <button onclick="salinTeks('email-subjek', this)" class="btn" style="background:#e2e8f0; color:#1e293b; padding: 0.5rem;">Salin Subjek</button>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:#475569;">Isi Email</label>
+                            <textarea id="email-isi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.6rem; font-size: 0.9rem; background: #f8fafc; min-height: 180px; margin-bottom: 0.5rem;">Yth. HRD Manager PT Mencari Cinta Sejati,
+
+Perkenalkan saya [Nama Anda], bermaksud melamar posisi Web Developer di perusahaan yang Bapak/Ibu pimpin.
+
+Bersama email ini, telah saya lampirkan Surat Lamaran, Curriculum Vitae (CV), dan dokumen pendukung lainnya dalam satu file PDF sebagai bahan pertimbangan.
+
+Besar harapan saya untuk dapat berdiskusi lebih lanjut mengenai kualifikasi saya pada tahap wawancara.
+
+Atas perhatian dan waktu yang Bapak/Ibu berikan, saya ucapkan terima kasih.
+
+Hormat saya,
+[Nama Anda]</textarea>
+                            <button onclick="salinTeks('email-isi', this)" class="btn btn-primary" style="padding: 0.5rem;">Salin Isi Email</button>
+                        </div>
+                    </div>
+                </details>
+
+                <!-- MENU LAMPIRAN -->
                 <details open>
                     <summary>Upload Lampiran</summary>
                     <div class="details-body">
-                        <span class="file-info">Unggah KTP, CV, atau Ijazah (Format Gambar JPG/PNG). Akan otomatis menjadi halaman baru.</span>
+                        <span class="file-info">Unggah KTP, CV, atau Ijazah (Format Gambar JPG/PNG). Akan otomatis menjadi halaman baru di PDF.</span>
                         <input type="file" id="in-file" multiple accept="image/*" class="form-group">
                         <button onclick="resetLampiran()" class="btn btn-danger">Hapus Semua Lampiran</button>
                     </div>
@@ -48,51 +80,58 @@
         <!-- MAIN PREVIEW (KERTAS A4 EDITABLE) -->
         <main class="main-preview">
             <div id="dokumen-cetak" class="a4-wrapper">
-                <div class="a4-paper">
-                    <div class="text-right mb-6"><span class="editable-text" contenteditable="true">Surabaya, 25 Oktober 2026</span></div>
+                
+                <div class="a4-paper" style="display: flex; flex-direction: column;">
                     
-                    <div class="mb-4"><p class="editable-text" contenteditable="true">Hal : Lamaran Pekerjaan</p></div>
-                    
-                    <div class="mb-6">
-                        <p class="editable-text" contenteditable="true">Kepada Yth.,</p>
-                        <p class="editable-text" contenteditable="true">HRD Manager</p>
-                        <!-- font-bold dihilangkan dari PT -->
-                        <p class="editable-text" contenteditable="true">PT Mencari Cinta Sejati</p>
-                        <p class="editable-text" contenteditable="true">di Tempat</p>
-                    </div>
-                    
-                    <div class="mb-4"><p class="editable-text" contenteditable="true">Dengan hormat,</p></div>
-                    
-                    <!-- Tag <strong> dihilangkan dari posisi -->
-                    <div class="mb-4">
-                        <div class="editable-text" contenteditable="true">Berdasarkan informasi lowongan pekerjaan yang saya peroleh, bahwa perusahaan yang Bapak/Ibu pimpin sedang membutuhkan karyawan untuk posisi Web Developer. Oleh karena itu, saya yang bertanda tangan di bawah ini:</div>
-                    </div>
-                    
-                    <table class="biodata-table">
-                        <tr><td class="td-label">Nama</td><td class="td-colon">:</td><td><span class="editable-text" contenteditable="true" id="out-nama" oninput="syncNama()">Nama Lengkap Anda</span></td></tr>
-                        <tr><td class="td-label">Pendidikan</td><td class="td-colon">:</td><td><span class="editable-text" contenteditable="true">SMK Jurusan Rekayasa Perangkat Lunak</span></td></tr>
-                        <tr><td class="td-label">No. HP</td><td class="td-colon">:</td><td><span class="editable-text" contenteditable="true">081234567890</span></td></tr>
-                        <tr><td class="td-label">Email</td><td class="td-colon">:</td><td><span class="editable-text" contenteditable="true">email@anda.com</span></td></tr>
-                    </table>
-                    
-                    <div class="mb-4">
-                        <div class="editable-text" contenteditable="true">Bermaksud untuk mengajukan lamaran pekerjaan pada posisi tersebut. Saya memiliki minat yang besar pada bidang ini dan siap untuk memberikan kontribusi terbaik bagi perusahaan. Sebagai bahan pertimbangan, bersama surat ini saya lampirkan dokumen persyaratan kelengkapan.
-<br><br>
-Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan kesempatan mengikuti tahapan seleksi selanjutnya. Atas perhatiannya saya ucapkan terima kasih.</div>
-                    </div>
-                    
-                    <div class="text-right mt-12">
-                        <p class="editable-text" contenteditable="true">Hormat saya,</p>
+                    <!-- SATU AREA KETIK UTAMA (Berlaku Seperti MS Word) -->
+                    <div contenteditable="true" style="outline: none; flex: 1;">
+                        <div class="text-right mb-6">Surabaya, 25 Oktober 2026</div>
                         
+                        <div class="mb-4">Hal : Lamaran Pekerjaan</div>
+                        
+                        <div class="mb-6">
+                            Kepada Yth.,<br>
+                            HRD Manager<br>
+                            PT Mencari Cinta Sejati<br>
+                            di Tempat
+                        </div>
+                        
+                        <div class="mb-4">Dengan hormat,</div>
+                        
+                        <div class="mb-4">
+                            Berdasarkan informasi lowongan pekerjaan yang saya peroleh, bahwa perusahaan yang Bapak/Ibu pimpin sedang membutuhkan karyawan untuk posisi Web Developer. Oleh karena itu, saya yang bertanda tangan di bawah ini:
+                        </div>
+                        
+                        <table class="biodata-table">
+                            <tr><td class="td-label">Nama</td><td class="td-colon">:</td><td>Nama Lengkap Anda</td></tr>
+                            <tr><td class="td-label">Pendidikan</td><td class="td-colon">:</td><td>SMK Jurusan Rekayasa Perangkat Lunak</td></tr>
+                            <tr><td class="td-label">No. HP</td><td class="td-colon">:</td><td>081234567890</td></tr>
+                            <tr><td class="td-label">Email</td><td class="td-colon">:</td><td>email@anda.com</td></tr>
+                        </table>
+                        
+                        <div class="mb-4">
+                            Bermaksud untuk mengajukan lamaran pekerjaan pada posisi tersebut. Saya memiliki minat yang besar pada bidang ini dan siap untuk memberikan kontribusi terbaik bagi perusahaan. Sebagai bahan pertimbangan, bersama surat ini saya lampirkan dokumen persyaratan kelengkapan.
+                            <br><br>
+                            Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan kesempatan mengikuti tahapan seleksi selanjutnya. Atas perhatiannya saya ucapkan terima kasih.
+                        </div>
+                        
+                        <div class="text-right">
+                            Hormat saya,
+                        </div>
+                    </div>
+
+                    <!-- AREA TANDA TANGAN -->
+                    <div class="text-right" contenteditable="false">
                         <div style="display: flex; flex-direction: column; align-items: flex-end; margin: 10px 0;">
                             <canvas id="ttd-canvas" width="180" height="80" style="border: 1px dashed #cbd5e1; border-radius: 4px; cursor: crosshair; touch-action: none; background: #f8fafc;"></canvas>
                             <button id="btn-hapus-ttd" onclick="clearCanvas()" style="font-size: 0.75rem; color: #ef4444; background: none; border: none; cursor: pointer; margin-top: 4px; font-weight: bold;">✖ Hapus Coretan</button>
                         </div>
                         
-                        <!-- font-bold dihilangkan dari Nama Lengkap (Tanda Tangan) -->
-                        <p class="underline editable-text" contenteditable="true" id="out-ttd">Nama Lengkap Anda</p>
+                        <div contenteditable="true" style="outline: none; display: inline-block;" class="underline" id="nama-ttd">Nama Lengkap Anda</div>
                     </div>
+
                 </div>
+
             </div>
         </main>
     </div>
@@ -105,10 +144,44 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
             overlay.classList.toggle('active');
         }
 
-        function syncNama() {
-            const namaUtama = document.getElementById('out-nama').innerText;
-            document.getElementById('out-ttd').innerText = namaUtama;
+        // --- FITUR SALIN TEKS EMAIL ---
+        function salinTeks(elementId, btn) {
+            const elemenTeks = document.getElementById(elementId);
+            elemenTeks.select();
+            elemenTeks.setSelectionRange(0, 99999); // Untuk kompabilitas layar HP
+            
+            navigator.clipboard.writeText(elemenTeks.value).then(() => {
+                const teksAsli = btn.innerText;
+                const warnaAsli = btn.style.backgroundColor;
+                const warnaTeksAsli = btn.style.color;
+                
+                // Ubah gaya tombol menjadi hijau saat berhasil disalin
+                btn.innerText = "Tersalin! ✔";
+                btn.style.backgroundColor = "#10b981"; 
+                btn.style.color = "white";
+                
+                // Kembalikan gaya tombol setelah 2 detik
+                setTimeout(() => {
+                    btn.innerText = teksAsli;
+                    btn.style.backgroundColor = warnaAsli;
+                    btn.style.color = warnaTeksAsli;
+                }, 2000);
+            }).catch(err => {
+                alert('Gagal menyalin teks!');
+            });
         }
+
+        // --- PENGATURAN TOMBOL ENTER DI AREA EDITABLE ---
+        document.addEventListener('keydown', function(e) {
+            const isEditable = e.target.hasAttribute('contenteditable') && e.target.getAttribute('contenteditable') === 'true';
+            
+            if (isEditable) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.execCommand('insertLineBreak');
+                }
+            }
+        });
 
         // --- FITUR MENGGAMBAR TANDA TANGAN DI CANVAS ---
         const canvas = document.getElementById('ttd-canvas');
@@ -184,11 +257,12 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
         // --- DOWNLOAD PDF ---
         function downloadPDF() {
             const element = document.getElementById('dokumen-cetak');
-            const namaPembuat = document.getElementById('out-nama').innerText.replace(/[^a-zA-Z0-9]/g, '_');
+            const namaPembuat = document.getElementById('nama-ttd').innerText.replace(/[^a-zA-Z0-9]/g, '_');
             
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebar-overlay').classList.remove('active');
-            document.querySelectorAll('.editable-text').forEach(el => el.setAttribute('contenteditable', 'false'));
+            
+            document.querySelectorAll('[contenteditable="true"]').forEach(el => el.setAttribute('contenteditable', 'false'));
             
             canvas.style.border = 'none';
             canvas.style.background = 'transparent';
@@ -226,7 +300,11 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
                     el.style.overflow = "visible";
                 });
 
-                document.querySelectorAll('.editable-text').forEach(el => el.setAttribute('contenteditable', 'true'));
+                document.querySelectorAll('[contenteditable="false"]').forEach(el => {
+                    if(el.id !== 'sidebar' && !el.classList.contains('text-right') || el.id === 'nama-ttd') {
+                        el.setAttribute('contenteditable', 'true');
+                    }
+                });
                 
                 canvas.style.border = '1px dashed #cbd5e1';
                 canvas.style.background = '#f8fafc';
@@ -235,4 +313,5 @@ Demikian surat lamaran ini saya buat. Besar harapan saya untuk dapat diberikan k
         }
     </script>
 </body>
-</html>
+                            </html>
+                
