@@ -22,24 +22,62 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial
 }
 
 /* --- SIDEBAR --- */
-.sidebar { background: #ffffff; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; box-shadow: 4px 0 15px rgba(0,0,0,0.03); z-index: 40; }
-.sidebar-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: space-between; align-items: center; }
+.sidebar { 
+    background: #ffffff; 
+    border-right: 1px solid #e2e8f0; 
+    display: flex; 
+    flex-direction: column; 
+    box-shadow: 4px 0 15px rgba(0,0,0,0.03); 
+    z-index: 40; 
+}
+.sidebar-header { 
+    padding: 1.25rem 1.5rem; 
+    border-bottom: 1px solid #e2e8f0; 
+    background: #f8fafc; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    flex-shrink: 0;
+}
 .sidebar-header h1 { font-size: 1.25rem; font-weight: 700; color: #2563eb; }
 .close-btn { background: none; border: none; font-size: 1.5rem; color: #64748b; cursor: pointer; display: none; }
-.sidebar-content { flex: 1; overflow-y: auto; padding: 1.5rem; }
+
+.sidebar-content { 
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 1.25rem; 
+}
 .sidebar-content::-webkit-scrollbar { width: 6px; }
 .sidebar-content::-webkit-scrollbar-track { background: transparent; }
 .sidebar-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-.sidebar-footer { padding: 1.25rem; border-top: 1px solid #e2e8f0; background: #ffffff; }
+
+/* Footer Sidebar (Tempat Tombol Unduh Locked) */
+.sidebar-footer { 
+    padding: 1.25rem; 
+    border-top: 1px solid #e2e8f0; 
+    background: #ffffff; 
+    flex-shrink: 0;
+}
 
 /* Responsif Sidebar HP */
 @media (max-width: 1023px) {
-    .sidebar { position: fixed; top: 0; left: -100%; width: 320px; max-width: 85vw; height: 100vh; transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .sidebar { 
+        position: fixed; 
+        top: 0; 
+        left: -100%; 
+        width: 320px; 
+        max-width: 85vw; 
+        height: 100vh;
+        height: 100dvh; /* dynamic viewport height untuk browser HP */
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
     .sidebar.open { left: 0; }
     .close-btn { display: block; }
     .sidebar-header h1 { font-size: 1.1rem; }
 }
-@media (min-width: 1024px) { .sidebar { width: 340px; flex-shrink: 0; height: 100vh; } }
+@media (min-width: 1024px) { 
+    .sidebar { width: 340px; flex-shrink: 0; height: 100vh; } 
+}
 
 /* Komponen Sidebar */
 .info-box { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; padding: 1rem; border-radius: 0.5rem; font-size: 0.9rem; margin-bottom: 1.5rem; }
@@ -69,17 +107,17 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; background: #eff6ff; c
 .a4-wrapper { display: flex; flex-direction: column; align-items: center; gap: 2rem; padding-bottom: 4rem; }
 .a4-paper { width: 210mm; min-height: 297mm; background: white; padding: 20mm; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); font-family: 'Times New Roman', Times, serif; color: #000; line-height: 1.5; text-align: justify; }
 
-/* PERBAIKAN GAMBAR LAMPIRAN AGAR TIDAK KETARIK */
+/* GAMBAR LAMPIRAN */
 .lampiran-img { 
     max-width: 100%; 
-    max-height: 250mm; /* Menahan tinggi agar tidak melebihi kertas (297mm - margin) */
+    max-height: 250mm; 
     width: auto; 
     height: auto; 
     display: block; 
-    margin: 0 auto; /* Posisi di tengah */
+    margin: 0 auto; 
 }
 
-/* --- EDITABLE TEXT BERGAYA MICROSOFT WORD --- */
+/* --- EDITABLE TEXT --- */
 .editable-text { outline: none !important; border: none !important; background: transparent !important; cursor: text; }
 .editable-text:hover, .editable-text:focus { outline: none !important; background: transparent !important; }
 
@@ -100,4 +138,4 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; background: #eff6ff; c
     .main-preview { padding: 0; background: transparent; }
     .a4-paper { box-shadow: none; margin: 0; width: 210mm !important; min-height: 297mm !important; padding: 20mm !important; font-size: 16px !important; }
                 }
-                   
+    
