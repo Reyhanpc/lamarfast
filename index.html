@@ -17,7 +17,7 @@
     <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <div class="app-container">
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR (MENU GARIS TIGA) -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h1>Menu Editor</h1>
@@ -27,7 +27,7 @@
             <div class="sidebar-content">
                 <div class="info-box">
                     💡 <strong>Tips Mode Cepat:</strong><br>
-                    Area kertas surat sekarang berfungsi persis seperti Microsoft Word. Data dan tanda tangan yang Anda buat akan <strong>tersimpan otomatis</strong> meski web dimuat ulang.
+                    Area kertas surat berfungsi seperti Microsoft Word. Data dan tanda tangan tersimpan otomatis di browser Anda.
                 </div>
 
                 <details open>
@@ -70,6 +70,7 @@ Hormat saya,
                 </details>
             </div>
 
+            <!-- TOMBOL UNDUH PDF (DI PALING BAWAH MENU SIDEBAR) -->
             <div class="sidebar-footer">
                 <button onclick="downloadPDF()" class="btn btn-primary">Unduh Semua Jadi 1 PDF</button>
             </div>
@@ -81,7 +82,6 @@ Hormat saya,
                 
                 <div class="a4-paper" style="display: flex; flex-direction: column;">
                     
-                    <!-- ID surat-content ditambahkan untuk fitur penyimpanan -->
                     <div id="surat-content" contenteditable="true" style="outline: none; flex: 1;">
                         <div class="text-right mb-6">Surabaya, 25 Oktober 2026</div>
                         
@@ -164,7 +164,7 @@ Hormat saya,
             }).catch(err => alert('Gagal menyalin teks!'));
         }
 
-        // --- PENGATURAN TOMBOL ENTER ---
+        // --- PENGATURAN ENTER ---
         document.addEventListener('keydown', function(e) {
             const isEditable = e.target.hasAttribute('contenteditable') && e.target.getAttribute('contenteditable') === 'true';
             if (isEditable && e.key === 'Enter') {
@@ -173,7 +173,7 @@ Hormat saya,
             }
         });
 
-        // --- FITUR AUTO-SAVE TEKS KE LOCALSTORAGE ---
+        // --- FITUR AUTO-SAVE ---
         function saveTextData() {
             localStorage.setItem('suratContent', document.getElementById('surat-content').innerHTML);
             localStorage.setItem('namaTtd', document.getElementById('nama-ttd').innerHTML);
@@ -186,7 +186,7 @@ Hormat saya,
         document.getElementById('email-subjek').addEventListener('input', saveTextData);
         document.getElementById('email-isi').addEventListener('input', saveTextData);
 
-        // --- FITUR MENGGAMBAR TANDA TANGAN & SAVE ---
+        // --- CANVAS TANDA TANGAN & SAVE ---
         const canvas = document.getElementById('ttd-canvas');
         const ctx = canvas.getContext('2d');
         let isDrawing = false;
@@ -208,7 +208,7 @@ Hormat saya,
             if (isDrawing) {
                 isDrawing = false;
                 ctx.beginPath(); 
-                saveSignature(); // Simpan tanda tangan otomatis ke memori saat goresan selesai
+                saveSignature();
             }
         }
 
@@ -239,10 +239,10 @@ Hormat saya,
 
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            localStorage.removeItem('savedSignature'); // Hapus tanda tangan dari memori
+            localStorage.removeItem('savedSignature');
         }
 
-        // --- LOAD DATA SAAT WEB DIBUKA ---
+        // --- LOAD DATA MEMORI ---
         window.onload = function() {
             if (localStorage.getItem('suratContent')) document.getElementById('surat-content').innerHTML = localStorage.getItem('suratContent');
             if (localStorage.getItem('namaTtd')) document.getElementById('nama-ttd').innerHTML = localStorage.getItem('namaTtd');
@@ -257,7 +257,7 @@ Hormat saya,
             }
         };
 
-        // --- FITUR LAMPIRAN GAMBAR ---
+        // --- LAMPIRAN GAMBAR ---
         const fileInput = document.getElementById('in-file');
         const wadahCetak = document.getElementById('dokumen-cetak');
         
@@ -339,5 +339,5 @@ Hormat saya,
         }
     </script>
 </body>
-    </html>
-                
+                                </html>
+    
