@@ -30,7 +30,8 @@
                     Area kertas surat berfungsi seperti Microsoft Word. Data dan tanda tangan tersimpan otomatis di browser Anda.
                 </div>
 
-                <details open>
+                <!-- Dropdown default tertutup (tanpa atribut open) -->
+                <details>
                     <summary>Template Email (Copy-Paste)</summary>
                     <div class="details-body">
                         <span class="file-info">Edit template ini sesuai kebutuhan, lalu klik tombol Salin untuk menempelkannya di Gmail.</span>
@@ -60,7 +61,8 @@ Hormat saya,
                     </div>
                 </details>
 
-                <details open>
+                <!-- Dropdown default tertutup (tanpa atribut open) -->
+                <details>
                     <summary>Upload Lampiran</summary>
                     <div class="details-body">
                         <span class="file-info">Unggah KTP, CV, atau Ijazah (Format Gambar JPG/PNG). Akan otomatis menjadi halaman baru di PDF.</span>
@@ -90,7 +92,7 @@ Hormat saya,
                         <div class="mb-6">
                             Kepada Yth.,<br>
                             HRD Manager<br>
-                            PT Mencari Cinta Sejati<br>
+                            <span id="out-pt">PT Mencari Cinta Sejati</span><br>
                             di Tempat
                         </div>
                         
@@ -280,10 +282,22 @@ Hormat saya,
             fileInput.value = '';
         }
 
-        // --- DOWNLOAD PDF BAKU A4 (21 x 29.7 CM) ---
+        // --- DOWNLOAD PDF DENGAN FORMAT NAMA PT & PELAMAR ---
         function downloadPDF() {
             const element = document.getElementById('dokumen-cetak');
-            const namaPembuat = document.getElementById('nama-ttd').innerText.replace(/[^a-zA-Z0-9]/g, '_');
+            
+            // Ambil Teks PT dan Teks Nama Pelamar
+            const ptElement = document.getElementById('out-pt');
+            const namaElement = document.getElementById('nama-ttd');
+            
+            const ptText = ptElement ? ptElement.innerText.trim() : 'PT';
+            const namaText = namaElement ? namaElement.innerText.trim() : 'Pelamar';
+            
+            // Bersihkan karakter ilegal untuk nama file sistem
+            const cleanPt = ptText.replace(/[/\\?%*:|"<>]/g, '');
+            const cleanNama = namaText.replace(/[/\\?%*:|"<>]/g, '');
+            
+            const namaFilePDF = `Surat Lamaran ${cleanPt} ${cleanNama}.pdf`;
             
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('sidebar-overlay').classList.remove('active');
@@ -297,7 +311,6 @@ Hormat saya,
             element.style.gap = "0";
             element.style.paddingBottom = "0";
             
-            // Mengunci presisi kertas A4 saat dikonversi ke PDF
             document.querySelectorAll('.a4-paper').forEach(el => {
                 el.style.margin = "0";
                 el.style.boxShadow = "none";
@@ -308,10 +321,10 @@ Hormat saya,
 
             const opt = {
                 margin:       0,
-                filename:     `Surat_Lamaran_${namaPembuat}.pdf`,
+                filename:     namaFilePDF,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }, // Format baku A4 (210 x 297 mm)
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak:    { mode: ['css', 'legacy'] }
             };
 
