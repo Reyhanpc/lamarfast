@@ -122,9 +122,11 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; background: #eff6ff; c
 .main-preview { flex: 1; height: 100%; overflow-y: auto; padding: 2rem; background-color: #e2e8f0; }
 .a4-wrapper { display: flex; flex-direction: column; align-items: center; gap: 2rem; padding-bottom: 4rem; }
 
+/* --- AREA PREVIEW KERTAS (DIKUNCI PAS 1 HALAMAN A4) --- */
 .a4-paper { 
-    width: 210mm; /* 21 cm */
-    min-height: 297mm; /* 29.7 cm */
+    width: 210mm;         /* Lebar A4 (21 cm) */
+    height: 297mm;        /* Tinggi A4 mutlak (29.7 cm) */
+    max-height: 297mm;    /* Mencegah kertas melar ke bawah */
     background: white; 
     padding: 20mm; 
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); 
@@ -132,6 +134,7 @@ details[open] summary { border-bottom: 1px solid #e2e8f0; background: #eff6ff; c
     color: #000; 
     line-height: 1.5; 
     text-align: justify; 
+    overflow: hidden;     /* Teks yang berlebihan tidak akan membuat kertas melar */
 }
 
 /* GAMBAR LAMPIRAN */
