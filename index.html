@@ -70,7 +70,7 @@ Hormat saya,
                 </details>
             </div>
 
-            <!-- TOMBOL UNDUH PDF (DI PALING BAWAH MENU SIDEBAR) -->
+            <!-- TOMBOL UNDUH PDF DI SIDEBAR BAWAH -->
             <div class="sidebar-footer">
                 <button onclick="downloadPDF()" class="btn btn-primary">Unduh Semua Jadi 1 PDF</button>
             </div>
@@ -280,7 +280,7 @@ Hormat saya,
             fileInput.value = '';
         }
 
-        // --- DOWNLOAD PDF ---
+        // --- DOWNLOAD PDF BAKU A4 (21 x 29.7 CM) ---
         function downloadPDF() {
             const element = document.getElementById('dokumen-cetak');
             const namaPembuat = document.getElementById('nama-ttd').innerText.replace(/[^a-zA-Z0-9]/g, '_');
@@ -297,6 +297,7 @@ Hormat saya,
             element.style.gap = "0";
             element.style.paddingBottom = "0";
             
+            // Mengunci presisi kertas A4 saat dikonversi ke PDF
             document.querySelectorAll('.a4-paper').forEach(el => {
                 el.style.margin = "0";
                 el.style.boxShadow = "none";
@@ -310,7 +311,7 @@ Hormat saya,
                 filename:     `Surat_Lamaran_${namaPembuat}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, scrollY: 0, scrollX: 0 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }, // Format baku A4 (210 x 297 mm)
                 pagebreak:    { mode: ['css', 'legacy'] }
             };
 
@@ -339,5 +340,4 @@ Hormat saya,
         }
     </script>
 </body>
-                                </html>
-    
+</html>
