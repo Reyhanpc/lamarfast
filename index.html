@@ -27,41 +27,28 @@
             <div class="sidebar-content">
                 <div class="info-box">
                     💡 <strong>Tips Mode Cepat:</strong><br>
-                    Area kertas surat berfungsi seperti Microsoft Word. Data dan tanda tangan tersimpan otomatis di browser Anda.
+                    Area kertas surat berfungsi seperti Microsoft Word. Data, tanda tangan, dan template email tersimpan & terupdate otomatis.
                 </div>
 
-                <!-- Dropdown default tertutup (tanpa atribut open) -->
                 <details>
                     <summary>Template Email (Copy-Paste)</summary>
                     <div class="details-body">
-                        <span class="file-info">Edit template ini sesuai kebutuhan, lalu klik tombol Salin untuk menempelkannya di Gmail.</span>
+                        <span class="file-info">Template ini otomatis terupdate mengikuti Nama PT & Nama Anda di surat lamaran.</span>
                         
                         <div class="form-group" style="margin-top: 0.5rem;">
                             <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:#475569;">Subjek Email</label>
-                            <input type="text" id="email-subjek" value="Lamaran Pekerjaan - Web Developer - Nama Anda" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.6rem; font-size: 0.9rem; background: #f8fafc; margin-bottom: 0.5rem;">
+                            <input type="text" id="email-subjek" value="" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.6rem; font-size: 0.9rem; background: #f8fafc; margin-bottom: 0.5rem;">
                             <button onclick="salinTeks('email-subjek', this)" class="btn" style="background:#e2e8f0; color:#1e293b; padding: 0.5rem;">Salin Subjek</button>
                         </div>
                         
                         <div class="form-group" style="margin-top: 1.5rem;">
                             <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; color:#475569;">Isi Email</label>
-                            <textarea id="email-isi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.6rem; font-size: 0.9rem; background: #f8fafc; min-height: 180px; margin-bottom: 0.5rem;">Yth. HRD Manager PT Mencari Cinta Sejati,
-
-Perkenalkan saya [Nama Anda], bermaksud melamar posisi Web Developer di perusahaan yang Bapak/Ibu pimpin.
-
-Bersama email ini, telah saya lampirkan Surat Lamaran, Curriculum Vitae (CV), dan dokumen pendukung lainnya dalam satu file PDF sebagai bahan pertimbangan.
-
-Besar harapan saya untuk dapat berdiskusi lebih lanjut mengenai kualifikasi saya pada tahap wawancara.
-
-Atas perhatian dan waktu yang Bapak/Ibu berikan, saya ucapkan terima kasih.
-
-Hormat saya,
-[Nama Anda]</textarea>
+                            <textarea id="email-isi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 0.375rem; padding: 0.6rem; font-size: 0.9rem; background: #f8fafc; min-height: 180px; margin-bottom: 0.5rem;"></textarea>
                             <button onclick="salinTeks('email-isi', this)" class="btn btn-primary" style="padding: 0.5rem;">Salin Isi Email</button>
                         </div>
                     </div>
                 </details>
 
-                <!-- Dropdown default tertutup (tanpa atribut open) -->
                 <details>
                     <summary>Upload Lampiran</summary>
                     <div class="details-body">
@@ -175,18 +162,63 @@ Hormat saya,
             }
         });
 
-        // --- FITUR AUTO-SAVE ---
+        // --- SINKRONISASI OTOMATIS NAMA PT & NAMA PELAMAR KE TEMPLATE EMAIL ---
+        function getPtName() {
+            const ptElem = document.getElementById('out-pt');
+            if (ptElem && ptElem.innerText.trim()) {
+                return ptElem.innerText.trim();
+            }
+            const content = document.getElementById('surat-content').innerText;
+            const match = content.match(/HRD Manager\s*\n\s*(PT[^\n]*)/i);
+            if (match && match[1]) {
+                return match[1].trim();
+            }
+            return 'PT Tujuan';
+        }
+
+        function getNamaPelamar() {
+            const namaElem = document.getElementById('nama-ttd');
+            if (namaElem && namaElem.innerText.trim()) {
+                return namaElem.innerText.trim();
+            }
+            return 'Nama Lengkap Anda';
+        }
+
+        function updateEmailTemplate() {
+            const ptName = getPtName();
+            const namaPelamar = getNamaPelamar();
+
+            const subjekInput = document.getElementById('email-subjek');
+            const isiTextarea = document.getElementById('email-isi');
+
+            subjekInput.value = `Lamaran Pekerjaan - ${ptName} - ${namaPelamar}`;
+
+            isiTextarea.value = `Yth. HRD Manager ${ptName},
+
+Perkenalkan saya ${namaPelamar}, bermaksud melamar pekerjaan di perusahaan yang Bapak/Ibu pimpin.
+
+Bersama email ini, telah saya lampirkan Surat Lamaran, Curriculum Vitae (CV), dan dokumen pendukung lainnya dalam satu file PDF sebagai bahan pertimbangan.
+
+Besar harapan saya untuk dapat berdiskusi lebih lanjut mengenai kualifikasi saya pada tahap wawancara.
+
+Atas perhatian dan waktu yang Bapak/Ibu berikan, saya ucapkan terima kasih.
+
+Hormat saya,
+${namaPelamar}`;
+
+            localStorage.setItem('emailSubjek', subjekInput.value);
+            localStorage.setItem('emailIsi', isiTextarea.value);
+        }
+
+        // --- FITUR AUTO-SAVE & SINKRONISASI EMAIL REAL-TIME ---
         function saveTextData() {
             localStorage.setItem('suratContent', document.getElementById('surat-content').innerHTML);
             localStorage.setItem('namaTtd', document.getElementById('nama-ttd').innerHTML);
-            localStorage.setItem('emailSubjek', document.getElementById('email-subjek').value);
-            localStorage.setItem('emailIsi', document.getElementById('email-isi').value);
+            updateEmailTemplate();
         }
 
         document.getElementById('surat-content').addEventListener('input', saveTextData);
         document.getElementById('nama-ttd').addEventListener('input', saveTextData);
-        document.getElementById('email-subjek').addEventListener('input', saveTextData);
-        document.getElementById('email-isi').addEventListener('input', saveTextData);
 
         // --- CANVAS TANDA TANGAN & SAVE ---
         const canvas = document.getElementById('ttd-canvas');
@@ -248,9 +280,9 @@ Hormat saya,
         window.onload = function() {
             if (localStorage.getItem('suratContent')) document.getElementById('surat-content').innerHTML = localStorage.getItem('suratContent');
             if (localStorage.getItem('namaTtd')) document.getElementById('nama-ttd').innerHTML = localStorage.getItem('namaTtd');
-            if (localStorage.getItem('emailSubjek')) document.getElementById('email-subjek').value = localStorage.getItem('emailSubjek');
-            if (localStorage.getItem('emailIsi')) document.getElementById('email-isi').value = localStorage.getItem('emailIsi');
             
+            updateEmailTemplate();
+
             const savedSig = localStorage.getItem('savedSignature');
             if (savedSig) {
                 const img = new Image();
@@ -286,14 +318,9 @@ Hormat saya,
         function downloadPDF() {
             const element = document.getElementById('dokumen-cetak');
             
-            // Ambil Teks PT dan Teks Nama Pelamar
-            const ptElement = document.getElementById('out-pt');
-            const namaElement = document.getElementById('nama-ttd');
+            const ptText = getPtName();
+            const namaText = getNamaPelamar();
             
-            const ptText = ptElement ? ptElement.innerText.trim() : 'PT';
-            const namaText = namaElement ? namaElement.innerText.trim() : 'Pelamar';
-            
-            // Bersihkan karakter ilegal untuk nama file sistem
             const cleanPt = ptText.replace(/[/\\?%*:|"<>]/g, '');
             const cleanNama = namaText.replace(/[/\\?%*:|"<>]/g, '');
             
